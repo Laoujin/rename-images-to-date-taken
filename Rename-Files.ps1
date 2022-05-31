@@ -1,11 +1,28 @@
-$lookIn = '.\'
+$lookIn = '.\pics'
 
 $CharWhiteList = '[^: \w\/]'
 $Shell = New-Object -ComObject shell.application
+
+$lastDateTaken = Get-Date
 $i = 1
 
 Get-ChildItem -Path $lookIn -Filter *.jpg -Recurse -File | ForEach-Object {
     $dir = $Shell.Namespace($_.DirectoryName)
-    $DateTaken = [DateTime]($dir.GetDetailsOf($dir.ParseName($_.Name),12) -replace $CharWhiteList)
-    Rename-Item $_.FullName ('{0:yyyyMMdd HHmm}_{1:0000}.jpg' -f $DateTaken, $i++) # -WhatIf
+    $dateTakenString = $dir.GetDetailsOf($dir.ParseName($_.Name), 12) -replace $CharWhiteList
+    $dateTaken = [datetime]::ParseExact($dateTakenString, "dd/MM/yyyy HH:mm", [CultureInfo]::InvariantCulture)
+
+    $fileDetails = [PSCustomObject]@{
+        FullName = $_.FullName
+        DateTaken = $dateTaken
+    }
+
+    $fileDetails
+
+} | Sort-Object DateTaken | ForEach-Object {
+    if ($lastDateTaken.Date -ne $_.DateTaken.Date) {
+        $i = 1
+        $lastDateTaken = $_.DateTaken
+    }
+
+    Rename-Item $_.FullName ('{0:yyyyMMdd HHmm}_{1:0000}.jpg' -f $_.DateTaken, $i++) -WhatIf
 }
