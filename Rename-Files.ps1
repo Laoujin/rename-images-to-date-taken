@@ -9,7 +9,14 @@ $i = 1
 Get-ChildItem -Path $lookIn -Filter *.jpg -Recurse -File | ForEach-Object {
     $dir = $Shell.Namespace($_.DirectoryName)
     $dateTakenString = $dir.GetDetailsOf($dir.ParseName($_.Name), 12) -replace $CharWhiteList
-    $dateTaken = [datetime]::ParseExact($dateTakenString, "dd/MM/yyyy HH:mm", [CultureInfo]::InvariantCulture)
+    $fileName = $_.FullName
+
+    try {
+        $dateTaken = [datetime]::ParseExact($dateTakenString, "dd/MM/yyyy HH:mm", [CultureInfo]::InvariantCulture)
+    } catch {
+        Write-Host "Could not parse date for '$fileName'. Value was: '$dateTakenString'"
+        return
+    }
 
     $fileDetails = [PSCustomObject]@{
         FullName = $_.FullName
