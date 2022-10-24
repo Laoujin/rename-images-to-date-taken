@@ -74,3 +74,5 @@ Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, 
         Write-Host "ERREUR" $_.Error
     }
 }
+
+echo "It has been done"
