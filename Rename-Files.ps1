@@ -21,14 +21,25 @@ Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, 
     $fullName = $_.FullName
 
     if ([string]::IsNullOrEmpty($dateTakenString)) {
-        # TODO: there are also files named: IMG-20220404-WA0000.jpg
-        # Try file format 20220320_102830.jpg
-        $dateTakenString = $_.Name.Substring(0, 13)
-        try {
-            $dateTaken = [datetime]::ParseExact($dateTakenString, "yyyyMMdd_HHmm", [CultureInfo]::InvariantCulture)
-        } catch {
-            $dateTaken = $lastWriteTime
+        # Try file format IMG-20220404-WA0000.jpg
+        if ($_.Name.StartsWith("IMG-")) {
+            $dateTakenString = $_.Name.Substring(4, 8)
+            try {
+                $dateTaken = [datetime]::ParseExact($dateTakenString, "yyyyMMdd", [CultureInfo]::InvariantCulture)
+            } catch {
+                $dateTaken = $lastWriteTime
+            }
+
+        } else {
+            # Try file format 20220320_102830.jpg
+            $dateTakenString = $_.Name.Substring(0, 13)
+            try {
+                $dateTaken = [datetime]::ParseExact($dateTakenString, "yyyyMMdd_HHmm", [CultureInfo]::InvariantCulture)
+            } catch {
+                $dateTaken = $lastWriteTime
+            }
         }
+
 
     } else {
         try {
