@@ -65,7 +65,7 @@ Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, 
         $lastDateTaken = $_.DateTaken
     }
 
-    $outputFileName = ("{0:yyyyMMdd HHmm}_{1:0000}" -f $_.DateTaken, $i++)
+    $outputFileName = ("{0:yyyy-MM-dd HHmm}_{1:0000}" -f $_.DateTaken, $i++)
     # echo "input is $($_.FullName) -- output is $outputFileName$($_.Extension)"
 
     # TODO: Remove the -WhatIf to actually rename the files:
