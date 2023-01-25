@@ -7,11 +7,11 @@ $dateFormats = "dd/MM/yyyy HH:mm", "d/MM/yyyy HH:mm"
 $lastDateTaken = Get-Date
 $i = 1
 
-Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, *.mp4, *.tif -Recurse -File | ForEach-Object {
+Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, *.mp4, *.tif, *.avi -Recurse -File | ForEach-Object {
     $dir = $Shell.Namespace($_.DirectoryName)
 
     $lcid = 12 # CLID for 'Date taken'
-    if ($_.Extension -eq ".mp4") {
+    if ($_.Extension -eq ".mp4" -or $_.Extension -eq ".avi") {
         $lcid = 208 # CLID for 'Media created'
     }
 
