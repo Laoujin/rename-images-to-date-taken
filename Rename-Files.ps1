@@ -30,7 +30,7 @@ Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, 
                 $dateTaken = $lastWriteTime
             }
 
-        } else {
+        } elseif ($_.Name.Length > 13) {
             # Try file format 20220320_102830.jpg
             $dateTakenString = $_.Name.Substring(0, 13)
             try {
@@ -38,6 +38,9 @@ Get-ChildItem -Path $lookIn -Include *.jpeg, *.png, *.gif, *.jpg, *.bmp, *.png, 
             } catch {
                 $dateTaken = $lastWriteTime
             }
+
+        } else {
+            $dateTaken = $lastWriteTime
         }
 
 
